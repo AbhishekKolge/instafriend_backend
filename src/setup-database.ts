@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
+import { config } from './config';
 
 export const databaseConnection = async () => {
   const connect = async () => {
     try {
-      await mongoose.connect('mongodb://localhost:27017/instafriend_local_db');
+      await mongoose.connect(config.DATABASE_URL!);
       console.log('successfully connected to database');
     } catch (error) {
       console.log('error connecting to database', error);

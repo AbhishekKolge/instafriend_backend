@@ -5,6 +5,9 @@ import { json, urlencoded, type Application } from 'express';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import { Server } from 'http';
+import { config } from './config';
+
+const SERVER_PORT = 8000;
 
 export class AppServer {
   private app: Application;
@@ -25,16 +28,16 @@ export class AppServer {
     app.use(
       cookieSession({
         name: 'session',
-        keys: [],
+        keys: [config.SECRET_KEY_ONE!, config.SECRET_KEY_TWO!],
         maxAge: 24 * 7 * 3600000,
-        secure: false,
+        secure: config.NODE_ENV === 'production',
       })
     );
     app.use(hpp());
     app.use(helmet());
     app.use(
       cors({
-        origin: '*',
+        origin: config.CLIENT_URL,
         credentials: true,
         optionsSuccessStatus: 200,
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -64,8 +67,10 @@ export class AppServer {
   // private createSocketIo(httpServer: Server): void {}
 
   private startHttpServer(httpServer: Server): void {
-    httpServer.listen(8000, () => {
-      console.log('Server is running on port 8000');
+    httpServer.listen(SERVER_PORT, () => {
+      console.log(
+        `Server is running on port ${SERVER_PORT} in ${config.NODE_ENV} mode`
+      );
     });
   }
 }
