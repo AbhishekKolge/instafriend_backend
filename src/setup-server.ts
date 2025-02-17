@@ -1,10 +1,10 @@
-import compression from "compression";
-import cookieSession from "cookie-session";
-import cors from "cors";
-import { json, urlencoded, type Application } from "express";
-import helmet from "helmet";
-import hpp from "hpp";
-import type { Server } from "http";
+import compression from 'compression';
+import cookieSession from 'cookie-session';
+import cors from 'cors';
+import { json, urlencoded, type Application } from 'express';
+import helmet from 'helmet';
+import hpp from 'hpp';
+import { Server } from 'http';
 
 export class AppServer {
   private app: Application;
@@ -16,15 +16,15 @@ export class AppServer {
   public start(): void {
     this.securityMiddleware(this.app);
     this.standardMiddleware(this.app);
-    this.routesMiddleware(this.app);
-    this.globalErrorHandler(this.app);
+    this.routesMiddleware();
+    this.globalErrorHandler();
     this.startServer(this.app);
   }
 
   private securityMiddleware(app: Application): void {
     app.use(
       cookieSession({
-        name: "session",
+        name: 'session',
         keys: [],
         maxAge: 24 * 7 * 3600000,
         secure: false,
@@ -34,27 +34,38 @@ export class AppServer {
     app.use(helmet());
     app.use(
       cors({
-        origin: "*",
+        origin: '*',
         credentials: true,
         optionsSuccessStatus: 200,
-        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       })
     );
   }
 
   private standardMiddleware(app: Application): void {
     app.use(compression());
-    app.use(json({ limit: "50mb" }));
-    app.use(urlencoded({ extended: true, limit: "50mb" }));
+    app.use(json({ limit: '50mb' }));
+    app.use(urlencoded({ extended: true, limit: '50mb' }));
   }
 
-  private routesMiddleware(app: Application): void {}
+  private routesMiddleware(): void {}
 
-  private globalErrorHandler(app: Application): void {}
+  private globalErrorHandler(): void {}
 
-  private startServer(app: Application): void {}
+  private async startServer(app: Application): Promise<void> {
+    try {
+      const httpServer: Server = new Server(app);
+      this.startHttpServer(httpServer);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-  private createSocketIo(httpServer: Server): void {}
+  // private createSocketIo(httpServer: Server): void {}
 
-  private startHttpServer(httpServer: Server): void {}
+  private startHttpServer(httpServer: Server): void {
+    httpServer.listen(8000, () => {
+      console.log('Server is running on port 8000');
+    });
+  }
 }

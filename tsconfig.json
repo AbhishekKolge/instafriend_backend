@@ -1,9 +1,10 @@
 {
   "extends": "@tsconfig/node18/tsconfig.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "lib": ["ES2022"],
+    "target": "ES2015",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "lib": ["ES2015"],
     "baseUrl": ".",
     "outDir": "./build",
     "rootDir": "src",
@@ -11,8 +12,8 @@
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "moduleResolution": "NodeNext",
-    "sourceMap": false,
+    "esModuleInterop": true,
+    "sourceMap": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "forceConsistentCasingInFileNames": true,
@@ -24,18 +25,14 @@
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strictBindCallApply": true,
-    "noEmit": false,
+    "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "strictPropertyInitialization": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "types": ["node"],
     "removeComments": true,
-    "strictMode": true,
     "downlevelIteration": true
-  },
-  "ts-node": {
-    "esm": true
   },
   "include": ["src/**/*.ts", "@type/**/*.d.ts"],
   "exclude": ["node_modules", "build", "tests", "**/*.spec.ts", "**/*.test.ts"]
