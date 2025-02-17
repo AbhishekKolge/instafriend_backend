@@ -1,12 +1,13 @@
 import { config } from './config';
-import { databaseConnection } from './setup-database';
+import { connectDatabase } from './setup-database';
 import { AppServer } from './setup-server';
 import express, { type Express } from 'express';
+import 'express-async-errors';
 
 class Application {
   public async initialize(): Promise<void> {
     this.loanConfig();
-    await databaseConnection();
+    await connectDatabase();
     const app: Express = express();
     const server: AppServer = new AppServer(app);
     server.start();

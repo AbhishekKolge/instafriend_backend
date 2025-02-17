@@ -6,6 +6,10 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import { Server } from 'http';
 import { config } from './config';
+import { Server as SocketIoServer } from 'socket.io';
+import { createClient } from 'redis';
+import { createAdapter } from '@socket.io/redis-adapter';
+import { routes } from './routes';
 
 const SERVER_PORT = 8000;
 
@@ -19,7 +23,7 @@ export class AppServer {
   public start(): void {
     this.securityMiddleware(this.app);
     this.standardMiddleware(this.app);
-    this.routesMiddleware();
+    this.routesMiddleware(this.app);
     this.globalErrorHandler();
     this.startServer(this.app);
   }
@@ -51,26 +55,44 @@ export class AppServer {
     app.use(urlencoded({ extended: true, limit: '50mb' }));
   }
 
-  private routesMiddleware(): void {}
+  private routesMiddleware(app: Application): void {
+    routes(app);
+  }
 
   private globalErrorHandler(): void {}
 
   private async startServer(app: Application): Promise<void> {
     try {
       const httpServer: Server = new Server(app);
+      const socketIo: SocketIoServer = await this.createSocketIo(httpServer);
       this.startHttpServer(httpServer);
+      this.socketIoConnections(socketIo);
     } catch (error) {
       console.log(error);
     }
   }
 
-  // private createSocketIo(httpServer: Server): void {}
+  private async createSocketIo(httpServer: Server): Promise<SocketIoServer> {
+    const io: SocketIoServer = new SocketIoServer(httpServer, {
+      cors: {
+        origin: config.CLIENT_URL,
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      },
+    });
+    const pubClient = createClient({ url: config.REDIS_HOST });
+    const subClient = pubClient.duplicate();
+    await Promise.all([pubClient.connect(), subClient.connect()]);
+    io.adapter(createAdapter(pubClient, subClient));
+    return io;
+  }
 
   private startHttpServer(httpServer: Server): void {
     httpServer.listen(SERVER_PORT, () => {
       console.log(
-        `Server is running on port ${SERVER_PORT} in ${config.NODE_ENV} mode`
+        `Server is running on port ${SERVER_PORT} in ${config.NODE_ENV} mode with process ${process.pid}`
       );
     });
   }
+
+  private socketIoConnections(io: SocketIoServer): void {}
 }
