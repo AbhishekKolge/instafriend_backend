@@ -5,7 +5,6 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "lib": ["ES2022"],
-
     "rootDir": "src",
     "esModuleInterop": true,
     "strict": true,
@@ -33,7 +32,16 @@
     "allowSyntheticDefaultImports": true,
     "pretty": true,
     "removeComments": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "paths": {
+      "@globals/*": ["src/shared/globals/*"],
+      "@services/*": ["src/shared/services/*"],
+      "@sockets/*": ["src/shared/sockets/*"],
+      "@workers/*": ["src/shared/workers/*"],
+      "@src/*": ["src/*"]
+    }
   },
   "ts-node": {
     "esm": true

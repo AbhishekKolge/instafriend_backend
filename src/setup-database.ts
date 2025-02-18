@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
+import { logger } from '@globals/helpers';
 import { config } from './config';
-import { logger } from './shared/globals/helpers';
 
 export const connectDatabase = async () => {
   try {

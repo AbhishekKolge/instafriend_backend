@@ -1,4 +1,3 @@
-import express, { type Express } from 'express';
 import 'express-async-errors';
 import { config } from './config';
 import { connectDatabase } from './setup-database';
@@ -8,8 +7,7 @@ class Application {
   public async initialize(): Promise<void> {
     this.loanConfig();
     await connectDatabase();
-    const app: Express = express();
-    const server: AppServer = new AppServer(app);
+    const server: AppServer = new AppServer();
     server.start();
   }
 

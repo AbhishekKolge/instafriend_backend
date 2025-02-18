@@ -3,7 +3,7 @@ import { createAdapter } from '@socket.io/redis-adapter';
 import compression from 'compression';
 import cookieSession from 'cookie-session';
 import cors from 'cors';
-import {
+import express, {
   json,
   urlencoded,
   type Application,
@@ -27,8 +27,8 @@ const SERVER_PORT = 8000;
 export class AppServer {
   private app: Application;
 
-  constructor(app: Application) {
-    this.app = app;
+  constructor() {
+    this.app = express();
   }
 
   public start(): void {
@@ -97,12 +97,6 @@ export class AppServer {
           customError.statusCode = error.statusCode;
           customError.status = error.status;
         }
-
-        // if (error instanceof mongoose.Error) {
-        // }
-
-        // if (error instanceof mongoose.mongo.MongoServerError) {
-        // }
 
         res.status(customError.statusCode).json({
           message: customError.message,
