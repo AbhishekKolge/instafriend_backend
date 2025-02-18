@@ -1,3 +1,4 @@
+import { Server } from 'http';
 import { createAdapter } from '@socket.io/redis-adapter';
 import compression from 'compression';
 import cookieSession from 'cookie-session';
@@ -12,14 +13,13 @@ import {
 } from 'express';
 import helmet from 'helmet';
 import hpp from 'hpp';
-import { Server } from 'http';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import mongoose from 'mongoose';
+import morgan from 'morgan';
 import { createClient } from 'redis';
 import { Server as SocketIoServer } from 'socket.io';
 import { config } from './config';
 import { routes } from './routes';
-import morgan from 'morgan';
 import { CustomError, logger, NotFoundError } from './shared/globals/helpers';
 
 const SERVER_PORT = 8000;
@@ -43,10 +43,10 @@ export class AppServer {
     app.use(
       cookieSession({
         name: 'session',
-        keys: [config.SECRET_KEY_ONE!, config.SECRET_KEY_TWO!],
+        keys: [config.SECRET_KEY_ONE, config.SECRET_KEY_TWO],
         maxAge: 24 * 7 * 3600000,
         secure: config.IS_PRODUCTION,
-      })
+      }),
     );
     app.use(hpp());
     app.use(helmet());
@@ -56,7 +56,7 @@ export class AppServer {
         credentials: true,
         optionsSuccessStatus: 200,
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-      })
+      }),
     );
   }
 
@@ -67,7 +67,7 @@ export class AppServer {
     app.use(
       morgan('combined', {
         stream: { write: (message: string) => logger.info(message.trim()) },
-      })
+      }),
     );
   }
 
@@ -82,16 +82,12 @@ export class AppServer {
 
     app.use(
       (
-        error:
-          | Error
-          | CustomError
-          | mongoose.Error
-          | mongoose.mongo.MongoServerError,
+        error: Error | CustomError | mongoose.Error | mongoose.mongo.MongoServerError,
         _req: Request,
         res: Response,
-        _next: NextFunction
+        _next: NextFunction,
       ) => {
-        let customError = {
+        const customError = {
           message: error.message || 'Something went wrong, please try again',
           statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
           status: ReasonPhrases.INTERNAL_SERVER_ERROR,
@@ -102,11 +98,11 @@ export class AppServer {
           customError.status = error.status;
         }
 
-        if (error instanceof mongoose.Error) {
-        }
+        // if (error instanceof mongoose.Error) {
+        // }
 
-        if (error instanceof mongoose.mongo.MongoServerError) {
-        }
+        // if (error instanceof mongoose.mongo.MongoServerError) {
+        // }
 
         res.status(customError.statusCode).json({
           message: customError.message,
@@ -114,7 +110,7 @@ export class AppServer {
         });
 
         logger.error(error);
-      }
+      },
     );
   }
 
@@ -146,10 +142,10 @@ export class AppServer {
   private startHttpServer(httpServer: Server): void {
     httpServer.listen(SERVER_PORT, () => {
       logger.info(
-        `Server is running on port ${SERVER_PORT} in ${config.NODE_ENV} mode with process ${process.pid}`
+        `Server is running on port ${SERVER_PORT} in ${config.NODE_ENV} mode with process ${process.pid}`,
       );
     });
   }
 
-  private socketIoConnections(io: SocketIoServer): void {}
+  private socketIoConnections(_io: SocketIoServer): void {}
 }

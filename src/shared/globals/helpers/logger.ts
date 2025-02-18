@@ -1,15 +1,13 @@
-import { config } from 'src/config';
 import winston, { format, Logform } from 'winston';
+import { config } from 'src/config';
 import 'winston-daily-rotate-file';
 
 const { combine, timestamp, printf, errors, json, colorize } = format;
 
 const logFormat = printf(
-  ({ timestamp, level, message, stack }: Logform.TransformableInfo) => {
-    return stack
-      ? `${timestamp} [${level}]: ${message}\n${stack}`
-      : `${timestamp} [${level}]: ${message}`;
-  }
+  ({ timestamp: time, level, message, stack }: Logform.TransformableInfo) => {
+    return stack ? `${time} [${level}]: ${message}\n${stack}` : `${time} [${level}]: ${message}`;
+  },
 );
 
 const logLevel: string = config.IS_PRODUCTION ? 'info' : 'debug';

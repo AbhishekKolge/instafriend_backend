@@ -1,0 +1,10 @@
+{
+  "watch": ["src"],
+  "ext": "ts",
+  "exec": "node --import tsx",
+  "ignore": ["src/**/*.spec.ts", "src/**/*.test.ts", "build/**/*"],
+  "events": {
+    "restart": "clear"
+  },
+  "delay": "1000"
+}

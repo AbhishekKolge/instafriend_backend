@@ -1,39 +1,8 @@
 {
-  "extends": "@tsconfig/node18/tsconfig.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "target": "ES2015",
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "lib": ["ES2015"],
-    "baseUrl": ".",
-    "outDir": "./build",
-    "rootDir": "src",
-    "strict": true,
-    "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "esModuleInterop": true,
     "sourceMap": false,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true,
-    "pretty": true,
-    "resolveJsonModule": true,
     "skipLibCheck": false,
-    "declaration": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictBindCallApply": true,
-    "noEmit": false,
-    "noFallthroughCasesInSwitch": true,
-    "strictPropertyInitialization": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "types": ["node"],
-    "removeComments": true,
-    "downlevelIteration": true
-  },
-  "include": ["src/**/*.ts", "@type/**/*.d.ts"],
-  "exclude": ["node_modules", "build", "tests", "**/*.spec.ts", "**/*.test.ts"]
+    "noEmit": false
+  }
 }

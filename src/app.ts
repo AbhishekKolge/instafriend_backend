@@ -1,8 +1,8 @@
+import express, { type Express } from 'express';
+import 'express-async-errors';
 import { config } from './config';
 import { connectDatabase } from './setup-database';
 import { AppServer } from './setup-server';
-import express, { type Express } from 'express';
-import 'express-async-errors';
 
 class Application {
   public async initialize(): Promise<void> {
