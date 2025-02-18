@@ -1,8 +1,6 @@
 import dotenv from 'dotenv';
 
-dotenv.config({
-  path: `.env.${process.env.NODE_ENV}`,
-});
+dotenv.config();
 
 class Config {
   public DATABASE_URL: string;
