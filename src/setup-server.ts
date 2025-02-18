@@ -23,6 +23,8 @@ import {
   CustomError,
   NotFoundError,
 } from './shared/globals/helpers/error-handler';
+import morgan from 'morgan';
+import { logger } from './shared/globals/helpers/logger';
 
 const SERVER_PORT = 8000;
 
@@ -47,7 +49,7 @@ export class AppServer {
         name: 'session',
         keys: [config.SECRET_KEY_ONE!, config.SECRET_KEY_TWO!],
         maxAge: 24 * 7 * 3600000,
-        secure: config.NODE_ENV === 'production',
+        secure: config.IS_PRODUCTION,
       })
     );
     app.use(hpp());
@@ -66,6 +68,11 @@ export class AppServer {
     app.use(compression());
     app.use(json({ limit: '50mb' }));
     app.use(urlencoded({ extended: true, limit: '50mb' }));
+    app.use(
+      morgan('combined', {
+        stream: { write: (message: string) => logger.info(message.trim()) },
+      })
+    );
   }
 
   private routesMiddleware(app: Application): void {
@@ -109,6 +116,8 @@ export class AppServer {
           message: customError.message,
           status: customError.status,
         });
+
+        logger.error(error);
       }
     );
   }
@@ -120,7 +129,7 @@ export class AppServer {
       this.startHttpServer(httpServer);
       this.socketIoConnections(socketIo);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 
@@ -140,7 +149,7 @@ export class AppServer {
 
   private startHttpServer(httpServer: Server): void {
     httpServer.listen(SERVER_PORT, () => {
-      console.log(
+      logger.info(
         `Server is running on port ${SERVER_PORT} in ${config.NODE_ENV} mode with process ${process.pid}`
       );
     });
