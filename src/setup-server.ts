@@ -1,15 +1,28 @@
+import { createAdapter } from '@socket.io/redis-adapter';
 import compression from 'compression';
 import cookieSession from 'cookie-session';
 import cors from 'cors';
-import { json, urlencoded, type Application } from 'express';
+import {
+  json,
+  urlencoded,
+  type Application,
+  type NextFunction,
+  type Request,
+  type Response,
+} from 'express';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import { Server } from 'http';
-import { config } from './config';
-import { Server as SocketIoServer } from 'socket.io';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import mongoose from 'mongoose';
 import { createClient } from 'redis';
-import { createAdapter } from '@socket.io/redis-adapter';
+import { Server as SocketIoServer } from 'socket.io';
+import { config } from './config';
 import { routes } from './routes';
+import {
+  CustomError,
+  NotFoundError,
+} from './shared/globals/helpers/error-handler';
 
 const SERVER_PORT = 8000;
 
@@ -24,7 +37,7 @@ export class AppServer {
     this.securityMiddleware(this.app);
     this.standardMiddleware(this.app);
     this.routesMiddleware(this.app);
-    this.globalErrorHandler();
+    this.globalErrorHandler(this.app);
     this.startServer(this.app);
   }
 
@@ -59,7 +72,46 @@ export class AppServer {
     routes(app);
   }
 
-  private globalErrorHandler(): void {}
+  private globalErrorHandler(app: Application): void {
+    app.all('*', (req: Request, _res: Response) => {
+      throw new NotFoundError(`${req.originalUrl} not available.`);
+    });
+
+    app.use(
+      (
+        error:
+          | Error
+          | CustomError
+          | mongoose.Error
+          | mongoose.mongo.MongoServerError,
+        _req: Request,
+        res: Response,
+        _next: NextFunction
+      ) => {
+        let customError = {
+          message: error.message || 'Something went wrong, please try again',
+          statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+          status: ReasonPhrases.INTERNAL_SERVER_ERROR,
+        };
+
+        if (error instanceof CustomError) {
+          customError.statusCode = error.statusCode;
+          customError.status = error.status;
+        }
+
+        if (error instanceof mongoose.Error) {
+        }
+
+        if (error instanceof mongoose.mongo.MongoServerError) {
+        }
+
+        res.status(customError.statusCode).json({
+          message: customError.message,
+          status: customError.status,
+        });
+      }
+    );
+  }
 
   private async startServer(app: Application): Promise<void> {
     try {
