@@ -22,7 +22,7 @@
     "lint:staged": "lint-staged",
     "prettier": "prettier --write .",
     "prettier:check": "prettier --check .",
-    "prepare": "husky install",
+    "prepare": "husky",
     "deploy": "npm run build && npm run start:prod"
   },
   "keywords": [],
