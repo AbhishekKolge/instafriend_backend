@@ -1,0 +1,63 @@
+# Root configuration (prevents overrides from parent directories)
+root = true
+
+# Global defaults (applies to all files)
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
+max_line_length = 120
+
+# TypeScript & JavaScript files
+[*.{ts,js}]
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# JSON files (package.json, tsconfig.json, ESLint, Prettier, etc.)
+[*.json]
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = false
+insert_final_newline = true
+
+# YAML files (GitHub Actions, Docker Compose, etc.)
+[*.yml]
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = false
+insert_final_newline = true
+
+# Markdown files (Docs, README.md, etc.)
+[*.md]
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = false
+insert_final_newline = true
+max_line_length = off  # Markdown should allow long lines
+
+# Bash/Shell scripts
+[*.sh]
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# Log files (preserve raw format)
+[*.log]
+insert_final_newline = false
+trim_trailing_whitespace = false
+
+# Ignore minified & compressed files
+[*.{min.js,min.css,svg}]
+max_line_length = off
+trim_trailing_whitespace = false
+insert_final_newline = false
+
+# Ignore binary files
+[*.{png,jpg,jpeg,gif,ico,woff,woff2,eot,ttf,mp4,mp3}]
+charset = binary
