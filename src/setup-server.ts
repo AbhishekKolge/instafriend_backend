@@ -19,12 +19,8 @@ import { createClient } from 'redis';
 import { Server as SocketIoServer } from 'socket.io';
 import { config } from './config';
 import { routes } from './routes';
-import {
-  CustomError,
-  NotFoundError,
-} from './shared/globals/helpers/error-handler';
 import morgan from 'morgan';
-import { logger } from './shared/globals/helpers/logger';
+import { CustomError, logger, NotFoundError } from './shared/globals/helpers';
 
 const SERVER_PORT = 8000;
 
