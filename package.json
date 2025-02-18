@@ -5,7 +5,25 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "local": "NODE_ENV=local nodemon -r tsconfig-paths/register src/app.ts"
+    "local": "NODE_ENV=local nodemon -r tsconfig-paths/register --exec ts-node src/app.ts",
+    "local:debug": "NODE_ENV=local nodemon -r tsconfig-paths/register --exec ts-node --inspect src/app.ts",
+    "dev": "NODE_ENV=development nodemon -r tsconfig-paths/register --exec ts-node src/app.ts",
+    "dev:debug": "NODE_ENV=development nodemon -r tsconfig-paths/register --exec ts-node --inspect src/app.ts",
+    "build": "tsc --build tsconfig.build.json",
+    "start": "NODE_ENV=production node build/app.js",
+    "clean": "rimraf build coverage",
+    "prod:debug": "NODE_ENV=production node --inspect build/app.js",
+    "prebuild": "npm run lint",
+    "test": "jest --coverage --bail --findRelatedTests --maxWorkers=4",
+    "test:watch": "jest --watchAll",
+    "test:ci": "jest --ci --coverage --maxWorkers=2 --bail",
+    "lint": "eslint . --ext .ts --fix",
+    "lint:check": "eslint . --ext .ts --max-warnings=0",
+    "lint:staged": "lint-staged",
+    "prettier": "prettier --write .",
+    "prettier:check": "prettier --check .",
+    "prepare": "husky install",
+    "deploy": "npm run build && npm run start:prod"
   },
   "keywords": [],
   "author": "Abhishek Kolge",
@@ -19,7 +37,21 @@
     "@types/hpp": "^0.2.6",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.13.4",
+    "@typescript-eslint/eslint-plugin": "^8.24.1",
+    "@typescript-eslint/parser": "^8.24.1",
+    "eslint": "^9.20.1",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-security": "^3.0.1",
+    "eslint-plugin-unicorn": "^57.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
     "nodemon": "^3.1.9",
+    "prettier": "^3.5.1",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3"
@@ -44,5 +76,21 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.test.ts": [
+      "eslint --fix",
+      "prettier --write",
+      "jest --bail --findRelatedTests --maxWorkers=2"
+    ]
   }
 }
