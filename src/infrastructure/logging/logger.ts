@@ -1,6 +1,6 @@
 import winston, { format, Logform } from 'winston';
-import { config } from 'src/config';
 import 'winston-daily-rotate-file';
+import { isProduction } from '../config';
 
 const { combine, timestamp, printf, errors, json, colorize } = format;
 
@@ -10,7 +10,7 @@ const logFormat = printf(
   },
 );
 
-const logLevel: string = config.IS_PRODUCTION ? 'info' : 'debug';
+const logLevel: string = isProduction ? 'info' : 'debug';
 
 export const logger = winston.createLogger({
   level: logLevel,

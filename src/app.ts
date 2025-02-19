@@ -1,20 +1,18 @@
-import 'express-async-errors';
-import { config } from './config';
-import { connectDatabase } from './setup-database';
-import { AppServer } from './setup-server';
+import { Server } from '@application/server';
+import { logger } from '@infrastructure/logging';
 
-class Application {
-  public async initialize(): Promise<void> {
-    this.loanConfig();
-    await connectDatabase();
-    const server: AppServer = new AppServer();
-    server.start();
-  }
+process.on('uncaughtException', (error: Error) => {
+  logger.error('Uncaught Exception:', error);
+  process.exit(1);
+});
 
-  private loanConfig(): void {
-    config.validateConfig();
-  }
+process.on('unhandledRejection', (reason: unknown) => {
+  logger.error('Unhandled Rejection:', reason);
+  process.exit(1);
+});
+
+async function bootstrap() {
+  await Server.start();
 }
 
-const application: Application = new Application();
-application.initialize();
+bootstrap();

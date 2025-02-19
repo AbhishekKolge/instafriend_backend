@@ -36,10 +36,10 @@
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "paths": {
-      "@globals/*": ["src/shared/globals/*"],
-      "@services/*": ["src/shared/services/*"],
-      "@sockets/*": ["src/shared/sockets/*"],
-      "@workers/*": ["src/shared/workers/*"],
+      "@application/*": ["src/application/*"],
+      "@features/*": ["src/features/*"],
+      "@infrastructure/*": ["src/infrastructure/*"],
+      "@shared/*": ["src/shared/*"],
       "@src/*": ["src/*"]
     }
   },
