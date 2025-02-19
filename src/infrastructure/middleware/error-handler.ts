@@ -1,6 +1,6 @@
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
-import mongoose from 'mongoose';
+import type mongoose from 'mongoose';
 import { CustomError } from '@infrastructure/error';
 import { logger } from '@infrastructure/logging';
 

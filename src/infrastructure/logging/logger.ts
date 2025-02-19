@@ -1,4 +1,4 @@
-import winston, { format, Logform } from 'winston';
+import winston, { format, type Logform } from 'winston';
 import 'winston-daily-rotate-file';
 import { isProduction } from '../config';
 

@@ -37,22 +37,22 @@ export class AppServer {
     try {
       if (this.socketIo) {
         this.socketIo.close();
-        logger.info('Socket.IO server closed');
+        logger.info('✅ Socket.IO server closed');
       }
 
       if (this.pubClient) {
         await this.pubClient.disconnect();
-        logger.info('Redis pubClient disconnected');
+        logger.info('✅ Redis pubClient disconnected');
       }
 
       if (this.subClient) {
         await this.subClient.disconnect();
-        logger.info('Redis subClient disconnected');
+        logger.info('✅ Redis subClient disconnected');
       }
 
       if (this.httpServer) {
         this.httpServer.close(() => {
-          logger.info('HTTP server closed');
+          logger.info('✅ HTTP server closed');
         });
       }
 

@@ -1,4 +1,4 @@
-import { ZodError, ZodFormattedError } from 'zod';
+import type { ZodError, ZodFormattedError } from 'zod';
 
 export const formatZodErrors = (error: ZodError): string => {
   const formattedErrors: string[] = [];
