@@ -1,3 +1,4 @@
+import 'express-async-errors';
 import { Server } from 'http';
 import { createAdapter } from '@socket.io/redis-adapter';
 import compression from 'compression';
