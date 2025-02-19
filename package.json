@@ -18,6 +18,7 @@
     "prod": "dotenv -e .env.production -- node --import tsx build/app.js",
     "prod:debug": "dotenv -e .env.production -- node --import tsx --inspect build/app.js",
     "clean": "rimraf build logs",
+    "clean:all": "rimraf build logs node_modules",
     "prebuild": "npm run lint",
     "lint": "eslint 'src/**/*.ts' --fix",
     "lint:check": "eslint 'src/**/*.ts' --max-warnings=0",
