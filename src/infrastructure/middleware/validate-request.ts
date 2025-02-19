@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
-import { ZodSchema, ZodError } from 'zod';
+import { type ZodSchema, ZodError } from 'zod';
 import { logger } from '@infrastructure/logging';
 import { formatZodErrors } from '@infrastructure/shared/utils';
 
@@ -22,7 +22,7 @@ export const validateRequest =
           status: ReasonPhrases.BAD_REQUEST,
         });
         logger.warn(
-          `🔴 Validation failed for ${req.method} ${req.url} - Errors: ${JSON.stringify(formattedErrors)}`,
+          `⚠️ Validation failed for ${req.method} ${req.url} - Errors: ${JSON.stringify(formattedErrors)}`,
         );
       } else {
         next(error);

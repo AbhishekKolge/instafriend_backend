@@ -31,15 +31,15 @@ export class Database {
         family: 4,
       });
 
-      logger.info('✅ Successfully connected to MongoDB');
       this.retryAttempts = 0;
       this.isConnected = true;
+      logger.info('✅ Successfully connected to MongoDB');
     } catch (error) {
       this.retryAttempts++;
 
       if (this.retryAttempts < env.MONGO_RETRY_LIMIT) {
         logger.warn(
-          `❌ Failed to connect to MongoDB (attempt ${this.retryAttempts}/${env.MONGO_RETRY_LIMIT}). Retrying in ${env.MONGO_RETRY_DELAY / 1000} seconds...`,
+          `⚠️ Failed to connect to MongoDB (attempt ${this.retryAttempts}/${env.MONGO_RETRY_LIMIT}). Retrying in ${env.MONGO_RETRY_DELAY / 1000} seconds...`,
         );
         await delay(env.MONGO_RETRY_DELAY);
         await this.connect();
