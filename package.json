@@ -19,14 +19,17 @@
     "prod:debug": "dotenv -e .env.production -- node --import tsx --inspect build/app.js",
     "clean": "rimraf build logs",
     "clean:all": "rimraf build logs node_modules",
-    "prebuild": "npm run lint",
+    "prebuild": "pnpm lint",
     "lint": "eslint 'src/**/*.ts' --fix",
     "lint:check": "eslint 'src/**/*.ts' --max-warnings=0",
     "lint:staged": "lint-staged",
     "prettier": "prettier --write 'src/**/*.ts'",
     "prettier:check": "prettier --check 'src/**/*.ts'",
-    "prepare": "husky && husky install",
-    "typecheck": "tsc --noEmit"
+    "prepare": "husky install",
+    "typecheck": "tsc --noEmit",
+    "commit": "cz",
+    "release": "standard-version && git switch -c release/$(node -p \"require('./package.json').version\") && pnpm install && git push --follow-tags origin HEAD && gh pr create --base main --head release/$(node -p \"require('./package.json').version\") --title \"Release $(node -p \"require('./package.json').version\")\" --body \"Automated release PR\"",
+    "changelog": "standard-version --skip.commit --skip.tag"
   },
   "keywords": [],
   "author": "Abhishek Kolge",
@@ -44,6 +47,8 @@
     "@types/node": "^22.13.4",
     "@typescript-eslint/eslint-plugin": "^8.24.1",
     "@typescript-eslint/parser": "^8.24.1",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
     "dotenv-cli": "^8.0.0",
     "eslint": "^9.20.1",
     "eslint-config-prettier": "^10.0.1",
@@ -62,6 +67,7 @@
     "nodemon": "^3.1.9",
     "prettier": "^3.5.1",
     "rimraf": "^6.0.1",
+    "standard-version": "^9.5.0",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
@@ -99,5 +105,10 @@
       "prettier --write",
       "jest --bail --findRelatedTests --maxWorkers=2"
     ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

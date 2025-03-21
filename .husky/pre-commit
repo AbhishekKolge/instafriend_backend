@@ -2,7 +2,15 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 echo "🔍 Running lint-staged..."
-pnpm run lint:staged
+if ! pnpm run lint:staged; then
+  echo "❌ Linting failed. Fix errors before committing!"
+  exit 1
+fi
 
 echo "🔍 Running TypeScript type check..."
-pnpm run typecheck || (echo "❌ TypeScript errors found. Fix them before committing!" && exit 1)
+if ! pnpm run typecheck; then
+  echo "❌ TypeScript errors found. Fix them before committing!"
+  exit 1
+fi
+
+echo "✅ All checks passed. Committing..."
